@@ -1,10 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+// import 'package:flutter_firebase/features/user_auth/presentation/pages/sign_up_page.dart';
+// import 'package:flutter_firebase/features/user_auth/presentation/widgets/form_container_widget.dart';
+// import 'package:flutter_firebase/global/common/toast.dart';
+// import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:project1/firebase_auth_services.dart';
 import 'package:project1/form_container_widget.dart';
-import 'package:project1/home_page.dart';
 import 'package:project1/sign_up_page.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
+// import '../../firebase_auth_implementation/firebase_auth_services.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,8 +21,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool _isSigning = false;
   final FirebaseAuthService _auth = FirebaseAuthService();
-
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
@@ -30,6 +38,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: Text("Login"),
       ),
       body: Center(
@@ -63,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  _signIn ;
+                  _signIn();
                 },
                 child: Container(
                   width: double.infinity,
@@ -73,17 +82,53 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
-                    child: Text(
+                    child: _isSigning ? CircularProgressIndicator(
+                      color: Colors.white,) : Text(
                       "Login",
                       style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
               ),
+              SizedBox(height: 10,),
+              // GestureDetector(
+              //   onTap: () {
+              //     _signInWithGoogle();
+              //
+              //   },
+              //   child: Container(
+              //     width: double.infinity,
+              //     height: 45,
+              //     decoration: BoxDecoration(
+              //       color: Colors.red,
+              //       borderRadius: BorderRadius.circular(10),
+              //     ),
+              //     child: Center(
+              //       child: Row(
+              //         mainAxisAlignment: MainAxisAlignment.center,
+              //         children: [
+              //
+              //           Text(
+              //             "Sign in with Google",
+              //             style: TextStyle(
+              //               color: Colors.white,
+              //               fontWeight: FontWeight.bold,
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
+
+
               SizedBox(
                 height: 20,
               ),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -94,16 +139,19 @@ class _LoginPageState extends State<LoginPage> {
                   GestureDetector(
                     onTap: () {
                       Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => SignupPage()),
-                          (route) => false);
+                        context,
+                        MaterialPageRoute(builder: (context) => SignupPage()),
+                            (route) => false,
+                      );
                     },
                     child: Text(
                       "Sign Up",
                       style: TextStyle(
-                          color: Colors.blue, fontWeight: FontWeight.bold),
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
             ],
@@ -114,16 +162,29 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _signIn() async {
+    setState(() {
+      _isSigning = true;
+    });
+
     String email = _emailController.text;
     String password = _passwordController.text;
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
 
+    setState(() {
+      _isSigning = false;
+    });
+
     if (user != null) {
-      print("User is successfully SignedIn");
+      print( "User is successfully signed in");
       Navigator.pushNamed(context, "/home");
     } else {
-      print("Some error happened");
+      print("some error occured");
     }
   }
+
+
+
+
+
 }
