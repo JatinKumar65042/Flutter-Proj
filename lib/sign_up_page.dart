@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:project1/controllers/auth_controller.dart';
 import 'package:project1/firebase_auth_services.dart';
 import 'package:project1/form_container_widget.dart';
 import 'package:project1/login_page.dart';
@@ -15,7 +17,7 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends State<SignupPage> {
 
   final FirebaseAuthService _auth = FirebaseAuthService();
-
+  AuthController controller = Get.find() ;
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
@@ -72,7 +74,7 @@ class _SignupPageState extends State<SignupPage> {
                 height: 30,
               ),
               GestureDetector(
-                onTap: _signUp,
+                onTap: () => signup(),
                 child: Container(
                   width: double.infinity,
                   height: 45,
@@ -119,20 +121,11 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  void _signUp() async{
+  signup(){
     String username = _usernameController.text;
     String email = _emailController.text ;
     String password = _passwordController.text;
 
-    User? user = await _auth.signupWithEmailAndPassword(email, password);
-
-    if(user != null){
-      print("User is successfully created");
-      Navigator.pushNamed(context , "/home");
-    }else{
-      print("Some error happened");
-    }
-
+    controller.signup(username , email, password) ;
   }
-
 }

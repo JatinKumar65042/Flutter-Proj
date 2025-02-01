@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:project1/controllers/auth_controller.dart';
 // import 'package:flutter_firebase/features/user_auth/presentation/pages/sign_up_page.dart';
 // import 'package:flutter_firebase/features/user_auth/presentation/widgets/form_container_widget.dart';
 // import 'package:flutter_firebase/global/common/toast.dart';
@@ -22,11 +25,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool _isSigning = false;
-  final FirebaseAuthService _auth = FirebaseAuthService();
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
-
+  AuthController controller = Get.put(AuthController()) ;
   @override
   void dispose() {
     _emailController.dispose();
@@ -72,7 +73,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               GestureDetector(
                 onTap: () {
-                  _signIn();
+                  login();
                 },
                 child: Container(
                   width: double.infinity,
@@ -161,26 +162,24 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _signIn() async {
+  login() {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+
+    if (email.isEmpty || password.isEmpty) {
+      Fluttertoast.showToast(
+        msg: "Please fill all fields ⚠️",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
+      return;
+    }
+
     setState(() {
       _isSigning = true;
     });
 
-    String email = _emailController.text;
-    String password = _passwordController.text;
-
-    User? user = await _auth.signInWithEmailAndPassword(email, password);
-
-    setState(() {
-      _isSigning = false;
-    });
-
-    if (user != null) {
-      print( "User is successfully signed in");
-      Navigator.pushNamed(context, "/home");
-    } else {
-      print("some error occured");
-    }
+    controller.login(email, password);
   }
 
 
