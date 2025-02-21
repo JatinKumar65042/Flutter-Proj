@@ -24,6 +24,7 @@ class AuthController extends GetxController {
       });
 
       // ✅ Show success message
+
       Fluttertoast.showToast(
         msg: "Signup Successful 🎉",
         toastLength: Toast.LENGTH_SHORT,
@@ -31,7 +32,7 @@ class AuthController extends GetxController {
       );
 
       print(credential);
-      Get.offAllNamed('/home');
+      Get.offAllNamed('/survey');
 
     } on FirebaseAuthException catch (e) {
       String errorMessage = "Something went wrong";

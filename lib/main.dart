@@ -2,6 +2,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:project1/controllers/auth_controller.dart';
+import 'package:project1/survey.dart';
+import 'package:project1/survey2.dart';
+import 'package:project1/survey3.dart';
+import 'package:project1/survey4.dart';
+import 'package:project1/survey5.dart';
 import 'firebase_options.dart';
 import 'package:get/get.dart'; // Import GetX
 import 'package:project1/google_maps.dart';
@@ -9,7 +14,7 @@ import 'package:project1/home_page.dart';
 import 'package:project1/login_page.dart';
 import 'package:project1/sign_up_page.dart';
 import 'package:project1/splash_screen.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -20,11 +25,14 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final String? userId = FirebaseAuth.instance.currentUser?.uid;
     return GetMaterialApp(  // ✅ Change from MaterialApp to GetMaterialApp
+
       debugShowCheckedModeBanner: false,
       title: "Flutter Firebase",
       theme: ThemeData(
@@ -37,6 +45,26 @@ class MyApp extends StatelessWidget {
         GetPage(name: '/signUp', page: () => SignupPage()),
         GetPage(name: '/home', page: () => HomePage()),
         GetPage(name: '/maps', page: () => GoogleMapsPage()),
+        GetPage(
+          name: '/survey',
+          page: () => Survey()
+        ),
+        GetPage(
+          name: '/survey2',
+          page: () => Survey2()
+        ),
+        GetPage(
+          name: '/survey3',
+          page: () => Survey3()
+        ),
+        GetPage(
+          name: '/survey4',
+          page: () => Survey4()
+        ),
+        GetPage(
+          name: '/survey5',
+          page: () => Survey5()
+        ),
       ],
     );
   }

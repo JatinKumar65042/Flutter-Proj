@@ -132,7 +132,8 @@ class _SignupPageState extends State<SignupPage> {
         id: user.uid, // Firebase UID as the user ID
         username: username,
         email: email,
-        password: password, // Ensure password is stored securely
+        password: password,
+
       );
 
       // Save user data to Firestore via UserRepository
